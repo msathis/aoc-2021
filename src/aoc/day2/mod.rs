@@ -27,6 +27,30 @@ impl Problem for Day2 {
     }
 
     fn part_two(&self) -> String {
-        todo!()
+        let data = self.input_as_vec("src/aoc/day2/input.txt".to_owned());
+        let mut x = 0;
+        let mut y = 0;
+        let mut aim = 0;
+
+        let res = data.iter().for_each(|s| {
+            let parts: Vec<&str> = s.split(' ').collect();
+            let val = parts[1].parse::<i32>().unwrap();
+            match parts[0] {
+                "forward" => {
+                    x = x + val;
+                    y = y + (aim * val)
+                }
+                "up" => {
+                    aim = aim - val;
+                }
+                "down" => {
+                    aim = aim + val;
+                }
+                &_ => {
+                    panic!("Wrong direction");
+                }
+            }
+        });
+        return (x * y).to_string();
     }
 }

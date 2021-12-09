@@ -6,5 +6,5 @@ mod aoc;
 
 fn main() {
     let day = Day2 {};
-    println!("Output: {}", day.part_one());
+    println!("Output: {}", day.part_two());
 }
