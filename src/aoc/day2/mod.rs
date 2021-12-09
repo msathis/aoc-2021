@@ -32,7 +32,7 @@ impl Problem for Day2 {
         let mut y = 0;
         let mut aim = 0;
 
-        let res = data.iter().for_each(|s| {
+        data.iter().for_each(|s| {
             let parts: Vec<&str> = s.split(' ').collect();
             let val = parts[1].parse::<i32>().unwrap();
             match parts[0] {
