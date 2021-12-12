@@ -31,13 +31,13 @@ impl Problem for Day4 {
 }
 
 impl Day4 {
-    fn find_board(random: &Vec<i32>, hash: &mut Vec<Vec<HashSet<i32>>>) -> Option<(i32, usize)> {
+    fn find_board(random: &[i32], hash: &mut Vec<Vec<HashSet<i32>>>) -> Option<(i32, usize)> {
         let mut result = None;
         for num in random {
             for (i, h) in hash.iter_mut().enumerate() {
                 for x in h {
                     x.remove(num);
-                    if x.len() == 0 && result.is_none() {
+                    if x.is_empty() && result.is_none() {
                         result = Some((*num, i));
                     }
                 }
@@ -49,10 +49,7 @@ impl Day4 {
         return result;
     }
 
-    fn find_last_board(
-        random: &Vec<i32>,
-        hash: &mut Vec<Vec<HashSet<i32>>>,
-    ) -> Option<(i32, usize)> {
+    fn find_last_board(random: &[i32], hash: &mut Vec<Vec<HashSet<i32>>>) -> Option<(i32, usize)> {
         let mut board_checked = HashSet::new();
         let size = hash.len();
         let mut result = None;
@@ -61,7 +58,7 @@ impl Day4 {
             for (i, h) in hash.iter_mut().enumerate() {
                 for x in h {
                     x.remove(num);
-                    if x.len() == 0 {
+                    if x.is_empty() {
                         board_checked.insert(i);
                     }
 
@@ -101,14 +98,14 @@ impl Day4 {
     fn prepare_boards(rows: Vec<Vec<i32>>) -> Vec<Vec<HashSet<i32>>> {
         let mut hashes = vec![];
 
-        for x in 0..(rows.len() / 5) {
+        for chunk in rows.chunks(5) {
             let mut board_hash = vec![HashSet::new(); 10];
             let mut board = vec![vec![0; 5]; 5];
             for i in 0..5 {
                 for j in 0..5 {
-                    let val = rows[(x * 5) + i][j];
+                    let val = chunk[i][j];
                     board_hash[i].insert(val);
-                    board_hash[i + 5].insert(rows[(x * 5) + j][i]);
+                    board_hash[i + 5].insert(chunk[j][i]);
                     board[i][j] = val;
                 }
             }
@@ -118,11 +115,6 @@ impl Day4 {
     }
 
     fn find_total_unmarked(hashes: &mut Vec<Vec<HashSet<i32>>>, index: usize) -> i32 {
-        let total_unmarked = hashes[index]
-            .iter()
-            .skip(5)
-            .map(|h| h.iter().fold(0, |acc, x| acc + x))
-            .fold(0, |acc, x| acc + x);
-        total_unmarked
+        hashes[index].iter().skip(5).flatten().sum()
     }
 }
