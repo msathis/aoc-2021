@@ -11,7 +11,7 @@ impl Problem for Day4 {
         let (random, rows) = Self::parse_input(&mut lines);
         let mut hashes = Self::prepare_boards(rows);
 
-        let (num, board) = Self::find_board(&random, &mut hashes);
+        let (num, board) = Self::find_board(&random, &mut hashes).unwrap();
         let total_unmarked = Self::find_total_unmarked(&mut hashes, board);
 
         return (total_unmarked * num).to_string();
@@ -23,7 +23,7 @@ impl Problem for Day4 {
         let (random, rows) = Self::parse_input(&mut lines);
         let mut hashes = Self::prepare_boards(rows);
 
-        let (num, board) = Self::find_last_board(&random, &mut hashes);
+        let (num, board) = Self::find_last_board(&random, &mut hashes).unwrap();
         let total_unmarked = Self::find_total_unmarked(&mut hashes, board);
 
         return (total_unmarked * num).to_string();
@@ -31,23 +31,32 @@ impl Problem for Day4 {
 }
 
 impl Day4 {
-    fn find_board(random: &Vec<i32>, hash: &mut Vec<Vec<HashSet<i32>>>) -> (i32, usize) {
+    fn find_board(random: &Vec<i32>, hash: &mut Vec<Vec<HashSet<i32>>>) -> Option<(i32, usize)> {
+        let mut result = None;
         for num in random {
             for (i, h) in hash.iter_mut().enumerate() {
                 for x in h {
                     x.remove(num);
-                    if x.len() == 0 {
-                        return (*num, i);
+                    if x.len() == 0 && result.is_none() {
+                        result = Some((*num, i));
                     }
+                }
+                if result.is_some() {
+                    return result;
                 }
             }
         }
-        return (-1, 0);
+        return result;
     }
 
-    fn find_last_board(random: &Vec<i32>, hash: &mut Vec<Vec<HashSet<i32>>>) -> (i32, usize) {
+    fn find_last_board(
+        random: &Vec<i32>,
+        hash: &mut Vec<Vec<HashSet<i32>>>,
+    ) -> Option<(i32, usize)> {
         let mut board_checked = HashSet::new();
         let size = hash.len();
+        let mut result = None;
+
         for num in random {
             for (i, h) in hash.iter_mut().enumerate() {
                 for x in h {
@@ -56,14 +65,17 @@ impl Day4 {
                         board_checked.insert(i);
                     }
 
-                    if board_checked.len() == size {
-                        let mut vec = board_checked.into_iter().collect::<Vec<_>>();
-                        return (*num, i);
+                    if board_checked.len() == size && result.is_none() {
+                        result = Some((*num, i));
                     }
+                }
+
+                if result.is_some() {
+                    return result;
                 }
             }
         }
-        return (-1, 0);
+        return result;
     }
 
     fn parse_input(lines: &mut Lines) -> (Vec<i32>, Vec<Vec<i32>>) {
