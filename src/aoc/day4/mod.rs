@@ -11,10 +11,10 @@ impl Problem for Day4 {
         let (random, rows) = Self::parse_input(&mut lines);
         let mut hashes = Self::prepare_boards(rows);
 
-        let res = Self::find_board(&random, &mut hashes);
-        let total_unmarked = Self::find_total_unmarked(&mut hashes, res.1);
+        let (num, board) = Self::find_board(&random, &mut hashes);
+        let total_unmarked = Self::find_total_unmarked(&mut hashes, board);
 
-        return (total_unmarked * res.0).to_string();
+        return (total_unmarked * num).to_string();
     }
 
     fn part_two(&self) -> String {
@@ -23,10 +23,10 @@ impl Problem for Day4 {
         let (random, rows) = Self::parse_input(&mut lines);
         let mut hashes = Self::prepare_boards(rows);
 
-        let res = Self::find_last_board(&random, &mut hashes);
-        let total_unmarked = Self::find_total_unmarked(&mut hashes, res.1);
+        let (num, board) = Self::find_last_board(&random, &mut hashes);
+        let total_unmarked = Self::find_total_unmarked(&mut hashes, board);
 
-        return (total_unmarked * res.0).to_string();
+        return (total_unmarked * num).to_string();
     }
 }
 
