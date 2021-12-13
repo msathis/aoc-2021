@@ -11,5 +11,5 @@ mod aoc;
 
 fn main() {
     let day = Day7 {};
-    println!("Output: {}", day.part_one());
+    println!("Output: {}", day.part_two());
 }
