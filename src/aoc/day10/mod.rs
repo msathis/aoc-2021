@@ -46,6 +46,57 @@ impl Problem for Day10 {
     }
 
     fn part_two(&self) -> String {
-        todo!()
+        let data = self.input_as_string("src/aoc/day10/input.txt".to_owned());
+        let lines = data
+            .lines()
+            .map(|x| x.split("").filter(|p| !p.is_empty()).collect::<Vec<&str>>())
+            .collect::<Vec<Vec<_>>>();
+        let map = HashMap::from([
+            ("(".to_owned(), 1),
+            ("[".to_owned(), 2),
+            ("{".to_owned(), 3),
+            ("<".to_owned(), 4),
+        ]);
+
+        let mut res = vec![];
+
+        for line in lines {
+            let mut stack = vec![];
+            let mut total: u128 = 0;
+            let mut is_valid = true;
+
+            for ch in line {
+                if !map.contains_key(ch) {
+                    let last = stack.last();
+                    if last.is_none() {
+                        break;
+                    }
+                    let last = last.unwrap();
+                    if (last == &"{" && ch == "}")
+                        || (last == &"(" && ch == ")")
+                        || (last == &"[" && ch == "]")
+                        || (last == &"<" && ch == ">")
+                    {
+                        stack.pop();
+                    } else {
+                        is_valid = false;
+                        break;
+                    }
+                } else {
+                    stack.push(ch);
+                }
+            }
+
+            if is_valid {
+                stack.reverse();
+                for ch in stack {
+                    total = (total * 5) as u128 + map.get(ch).unwrap();
+                }
+                res.push(total);
+            }
+        }
+
+        res.sort();
+        return res[res.len() / 2].to_string();
     }
 }
