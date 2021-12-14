@@ -5,11 +5,7 @@ pub struct Day10 {}
 
 impl Problem for Day10 {
     fn part_one(&self) -> String {
-        let data = self.input_as_string("src/aoc/day10/input.txt".to_owned());
-        let lines = data
-            .lines()
-            .map(|x| x.split("").filter(|p| !p.is_empty()).collect::<Vec<&str>>())
-            .collect::<Vec<Vec<_>>>();
+        let lines = self.parse_input();
         let map = HashMap::from([
             (")".to_owned(), 3),
             ("]".to_owned(), 57),
@@ -46,11 +42,7 @@ impl Problem for Day10 {
     }
 
     fn part_two(&self) -> String {
-        let data = self.input_as_string("src/aoc/day10/input.txt".to_owned());
-        let lines = data
-            .lines()
-            .map(|x| x.split("").filter(|p| !p.is_empty()).collect::<Vec<&str>>())
-            .collect::<Vec<Vec<_>>>();
+        let lines = self.parse_input();
         let map = HashMap::from([
             ("(".to_owned(), 1),
             ("[".to_owned(), 2),
@@ -98,5 +90,16 @@ impl Problem for Day10 {
 
         res.sort();
         return res[res.len() / 2].to_string();
+    }
+}
+
+impl Day10 {
+    fn parse_input(&self) -> Vec<Vec<&str>> {
+        let data = self.input_as_string("src/aoc/day10/input.txt".to_owned());
+        let lines = data
+            .lines()
+            .map(|x| x.split("").filter(|p| !p.is_empty()).collect::<Vec<&str>>())
+            .collect::<Vec<Vec<_>>>();
+        lines
     }
 }
